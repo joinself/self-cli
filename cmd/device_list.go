@@ -9,6 +9,7 @@ import (
 	"os"
 	"sort"
 	"strconv"
+	"time"
 
 	"github.com/joinself/self-go-sdk/pkg/siggraph"
 	"github.com/olekukonko/tablewriter"
@@ -17,7 +18,7 @@ import (
 
 var deviceListCommand = &cobra.Command{
 	Use:   "list",
-	Short: "lists all device",
+	Short: "lists all devices",
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) < 1 {
 			check(errors.New("you must specify an app identity [appID]"))
@@ -71,42 +72,50 @@ var deviceListCommand = &cobra.Command{
 			devices[d] = struct{}{}
 		}
 
-		dl := deviceList(sg.Devices())
-		sort.Sort(dl)
+		kl := deviceList(sg.Keys())
+		sort.Sort(kl)
 
-		lines := make([][]string, len(dl))
+		lines := make([][]string, len(kl))
 
-		for i, d := range dl {
-			_, listed := devices[d]
-
-			_, err := sg.ActiveDevice(d)
-
-			if d == "" {
+		for i, k := range kl {
+			if k == "" {
 				continue
 			}
 
-			if listed && err == nil { //
-				lines[i] = []string{d, "\033[1;32m✓", "✓\033[0m"}
+			did, err := sg.GetDeviceID(k)
+			if err != nil {
+				if err == siggraph.ErrNotDeviceKey {
+					continue
+				}
+				check(err)
 			}
 
-			if !listed && err == nil {
-				lines[i] = []string{d, "\033[1;31m✘", "\033[1;32m✓\033[0m"}
+			_, active := devices[did]
+
+			ra, err := sg.RevokedAt(k)
+			check(err)
+
+			lines[i] = []string{k, did}
+
+			if active {
+				lines[i] = append(lines[i], "\033[1;32m✓\033[0m")
+			} else {
+				lines[i] = append(lines[i], "\033[1;31m✘\033[0m")
 			}
 
-			if listed && err != nil {
-				lines[i] = []string{d, "\033[1:32m✓", "\033[1;31m✘\033[0m"}
+			if ra == 0 {
+				lines[i] = append(lines[i], "\033[1;34m-\033[0m")
+			} else {
+				lines[i] = append(lines[i], fmt.Sprintf("\033[1;31m%s\033[0m", time.Unix(ra, 0).Format(time.RFC3339)))
 			}
 
-			if !listed && err != nil {
-				lines[i] = []string{d, "\033[1;31m✘", "\033[1;31m✘\033[0m"}
-			}
 		}
 
 		fmt.Println("")
 
 		table := tablewriter.NewWriter(os.Stdout)
-		table.SetHeader([]string{"DID", "PUBLISHED", "ACTIVE"})
-		table.SetAlignment(tablewriter.ALIGN_LEFT)
+		table.SetHeader([]string{"KID", "DID", "ACTIVE", "REVOKED"})
+		table.SetAlignment(tablewriter.ALIGN_CENTER)
 		table.SetHeaderLine(false)
 		table.SetRowLine(false)
 		table.SetBorder(false)

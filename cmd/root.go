@@ -24,12 +24,13 @@ import (
 )
 
 var (
-	v               *viper.Viper
-	enc             = base64.RawURLEncoding
-	secretKey       string
-	recoveryKey     string
-	devicePublicKey string
-	effectiveFrom   int
+	v                 *viper.Viper
+	enc               = base64.RawURLEncoding
+	secretKey         string
+	recoveryKey       string
+	devicePublicKey   string
+	recoveryPublicKey string
+	effectiveFrom     int
 )
 
 // Identity represents an identity

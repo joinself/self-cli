@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/joinself/self-go-sdk/pkg/ntp"
 	"github.com/joinself/self-go-sdk/pkg/siggraph"
@@ -25,21 +26,31 @@ var accountRecoverCommand = &cobra.Command{
 			check(errors.New("you must specify an app identity and device [appID, deviceID]"))
 		}
 
-		if secretKey == "" {
-			check(errors.New("You must provide a secret key"))
+		if recoveryKey == "" {
+			check(errors.New("You must provide a secret recovery key"))
 		}
 
-		dpk, dsk, err := ed25519.GenerateKey(rand.Reader)
-		check(err)
+		var edpk, edsk, erpk, ersk string
 
-		edpk := enc.EncodeToString(dpk)
-		edsk := base64.RawStdEncoding.EncodeToString(dsk)
+		if devicePublicKey != "" {
+			edpk = devicePublicKey
+		} else {
+			dpk, dsk, err := ed25519.GenerateKey(rand.Reader)
+			check(err)
 
-		rpk, rsk, err := ed25519.GenerateKey(rand.Reader)
-		check(err)
+			edpk = enc.EncodeToString(dpk)
+			edsk = base64.RawStdEncoding.EncodeToString(dsk)
+		}
 
-		erpk := enc.EncodeToString(rpk)
-		ersk := base64.RawStdEncoding.EncodeToString(rsk)
+		if recoveryPublicKey != "" {
+			erpk = recoveryPublicKey
+		} else {
+			rpk, rsk, err := ed25519.GenerateKey(rand.Reader)
+			check(err)
+
+			erpk = enc.EncodeToString(rpk)
+			ersk = base64.RawStdEncoding.EncodeToString(rsk)
+		}
 
 		client := rest(args[0], secretKey)
 
@@ -68,22 +79,29 @@ var accountRecoverCommand = &cobra.Command{
 		rkid := strconv.Itoa(len(sg.Keys()) + 1)
 		dkid := strconv.Itoa(len(sg.Keys()) + 2)
 		ddid := strconv.Itoa(len(sg.Devices()) + 1)
+		now := ntp.TimeFunc().Unix()
 
 		actions := []siggraph.Action{
 			{
-				KID:           rkid,
+				KID:           strings.Split(secretKey, ":")[0],
 				Type:          siggraph.TypeRecoveryKey,
-				Action:        siggraph.ActionKeyAdd,
-				EffectiveFrom: ntp.TimeFunc().Unix(),
-				Key:           erpk,
+				Action:        siggraph.ActionKeyRevoke,
+				EffectiveFrom: now,
 			},
 			{
 				KID:           dkid,
 				DID:           ddid,
 				Type:          siggraph.TypeDeviceKey,
 				Action:        siggraph.ActionKeyAdd,
-				EffectiveFrom: ntp.TimeFunc().Unix(),
+				EffectiveFrom: now,
 				Key:           edpk,
+			},
+			{
+				KID:           rkid,
+				Type:          siggraph.TypeRecoveryKey,
+				Action:        siggraph.ActionKeyAdd,
+				EffectiveFrom: now,
+				Key:           erpk,
 			},
 		}
 
@@ -94,7 +112,7 @@ var accountRecoverCommand = &cobra.Command{
 		check(err)
 
 		// creating a new device
-		go log("revoking device key", done)
+		go log("recovering account", done)
 
 		resp, err = client.Post("/v1/identities/"+args[0]+"/history", "application/json", operation)
 		done <- err
@@ -104,10 +122,14 @@ var accountRecoverCommand = &cobra.Command{
 		}
 
 		fmt.Println("")
-		fmt.Println("device private key:    ", dkid+":"+edsk)
-		fmt.Println("device public key:     ", edpk)
-		fmt.Println("recovery private key:  ", rkid+":"+ersk)
-		fmt.Println("recovery public key:   ", erpk)
+		if edsk != "" {
+			fmt.Println("device private key:    ", dkid+":"+edsk)
+			fmt.Println("device public key:     ", edpk)
+		}
+		if ersk != "" {
+			fmt.Println("recovery private key:  ", rkid+":"+ersk)
+			fmt.Println("recovery public key:   ", erpk)
+		}
 	},
 }
 
@@ -115,4 +137,6 @@ func init() {
 	accountCommand.AddCommand(accountRecoverCommand)
 	accountRecoverCommand.Flags().StringVarP(&recoveryKey, "--recovery-key", "r", "", "Recovery secet key")
 	accountRecoverCommand.Flags().IntVarP(&effectiveFrom, "--effective-from", "f", 0, "Unix timestamp denoting when the action takes effect")
+	accountRecoverCommand.Flags().StringVarP(&devicePublicKey, "--device-public-key", "p", "", "Device public key")
+	accountRecoverCommand.Flags().StringVarP(&recoveryPublicKey, "--device-recovery-key", "q", "", "Recovery public key")
 }

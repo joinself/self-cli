@@ -17,12 +17,12 @@ import (
 	"golang.org/x/crypto/ed25519"
 )
 
-var deviceCreateCommand = &cobra.Command{
-	Use:   "create",
-	Short: "creates a new device",
+var deviceCycleCommand = &cobra.Command{
+	Use:   "cycle",
+	Short: "cycles a devices key",
 	Run: func(cmd *cobra.Command, args []string) {
-		if len(args) < 1 {
-			check(errors.New("you must specify an app identity [appID]"))
+		if len(args) < 2 {
+			check(errors.New("you must specify an app identity and device [appID, deviceID]"))
 		}
 
 		if secretKey == "" {
@@ -67,12 +67,21 @@ var deviceCreateCommand = &cobra.Command{
 
 		// create a new operation
 		kid := strconv.Itoa(len(sg.Keys()) + 1)
-		did := strconv.Itoa(len(sg.Devices()) + 1)
+
+		okid, err := sg.GetKeyID(args[1])
+		check(err)
 
 		actions := []siggraph.Action{
 			{
+				KID:           okid,
+				DID:           args[1],
+				Type:          siggraph.TypeDeviceKey,
+				Action:        siggraph.ActionKeyRevoke,
+				EffectiveFrom: ntp.TimeFunc().Unix(),
+			},
+			{
 				KID:           kid,
-				DID:           did,
+				DID:           args[1],
 				Type:          siggraph.TypeDeviceKey,
 				Action:        siggraph.ActionKeyAdd,
 				EffectiveFrom: ntp.TimeFunc().Unix(),
@@ -86,17 +95,10 @@ var deviceCreateCommand = &cobra.Command{
 		err = sg.Execute(operation)
 		check(err)
 
-		// creating a new device
-		go log("creating new device key", done)
+		// revoke old device and create a new device
+		go log("revoking old device key and creating new device key", done)
 
 		resp, err = client.Post("/v1/identities/"+args[0]+"/history", "application/json", operation)
-		done <- err
-
-		device := []byte(`{"id": "` + did + `", "platform": "sdk", "token": "-"}`)
-
-		go log("activating new device", done)
-
-		resp, err = client.Post("/v1/identities/"+args[0]+"/devices", "application/json", device)
 		done <- err
 
 		if esk != "" {
@@ -112,7 +114,7 @@ var deviceCreateCommand = &cobra.Command{
 }
 
 func init() {
-	deviceCommand.AddCommand(deviceCreateCommand)
-	deviceCreateCommand.Flags().StringVarP(&secretKey, "secret-key", "s", "", "Device secret key")
-	deviceCreateCommand.Flags().StringVarP(&devicePublicKey, "device-public-key", "p", "", "New device public key")
+	deviceCommand.AddCommand(deviceCycleCommand)
+	deviceCycleCommand.Flags().StringVarP(&secretKey, "secret-key", "s", "", "Device secret key")
+	deviceCycleCommand.Flags().StringVarP(&devicePublicKey, "device-public-key", "p", "", "New device public key")
 }

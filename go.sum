@@ -116,6 +116,8 @@ github.com/joinself/self-go-sdk v0.0.0-20201210135813-19b9127aba4c h1:yYgW/qjEn4
 github.com/joinself/self-go-sdk v0.0.0-20201210135813-19b9127aba4c/go.mod h1:IH/4wS8mgLRL81lq4AhyWH6SzJ4UYqH+Z0fAQi+BC3c=
 github.com/joinself/self-go-sdk v0.0.0-20201214130354-fd09785147a1 h1:CPQhTSHQiOEm2rU0Njjb0wvJfIMUEn3l0nfpTARNJPM=
 github.com/joinself/self-go-sdk v0.0.0-20201214130354-fd09785147a1/go.mod h1:IH/4wS8mgLRL81lq4AhyWH6SzJ4UYqH+Z0fAQi+BC3c=
+github.com/joinself/self-go-sdk v0.0.0-20201215165053-f67b0d047a12 h1:ebrAD2cnwv1ujeCwdoqJ1xN/tO4elOcwXj3QJdL6uNs=
+github.com/joinself/self-go-sdk v0.0.0-20201215165053-f67b0d047a12/go.mod h1:IH/4wS8mgLRL81lq4AhyWH6SzJ4UYqH+Z0fAQi+BC3c=
 github.com/jonboulle/clockwork v0.1.0/go.mod h1:Ii8DK3G1RaLaWxj9trq07+26W01tbo22gdxWY5EU2bo=
 github.com/json-iterator/go v1.1.6/go.mod h1:+SdeFBvtyEkXs7REEP0seUULqWtbJapLOCVDaaPEHmU=
 github.com/jstemmer/go-junit-report v0.0.0-20190106144839-af01ea7f8024/go.mod h1:6v2b51hI/fHJwM22ozAgKL4VKDeJcHhJFhtBdhmNjmU=
