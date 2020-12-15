@@ -17,9 +17,9 @@ import (
 	"golang.org/x/crypto/ed25519"
 )
 
-var deviceCycleCommand = &cobra.Command{
-	Use:   "cycle",
-	Short: "cycles a devices key",
+var deviceRotateCommand = &cobra.Command{
+	Use:   "rotate",
+	Short: "rotates a devices key",
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) < 2 {
 			check(errors.New("you must specify an app identity and device [appID, deviceID]"))
@@ -114,7 +114,7 @@ var deviceCycleCommand = &cobra.Command{
 }
 
 func init() {
-	deviceCommand.AddCommand(deviceCycleCommand)
-	deviceCycleCommand.Flags().StringVarP(&secretKey, "secret-key", "s", "", "Device secret key")
-	deviceCycleCommand.Flags().StringVarP(&devicePublicKey, "device-public-key", "p", "", "New device public key")
+	deviceCommand.AddCommand(deviceRotateCommand)
+	deviceRotateCommand.Flags().StringVarP(&secretKey, "secret-key", "s", "", "Device secret key")
+	deviceRotateCommand.Flags().StringVarP(&devicePublicKey, "device-public-key", "p", "", "New device public key")
 }
