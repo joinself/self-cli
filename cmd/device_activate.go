@@ -4,7 +4,6 @@ package cmd
 
 import (
 	"errors"
-	"fmt"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -15,7 +14,7 @@ var deviceActivateCommand = &cobra.Command{
 	Short: "activates a device",
 	Long:  "activates a device and advertises it as available for receiving messages",
 	Run: func(cmd *cobra.Command, args []string) {
-		if len(args) < 1 {
+		if len(args) < 2 {
 			check(errors.New("you must specify an app identity and device [appID, deviceID]"))
 		}
 
@@ -31,10 +30,8 @@ var deviceActivateCommand = &cobra.Command{
 
 		device := []byte(`{"id": "` + args[1] + `", "platform": "sdk", "token": "-"}`)
 
-		resp, err := client.Post("/v1/identities/"+args[0]+"/devices", "application/json", device)
+		_, err := client.Post("/v1/identities/"+args[0]+"/devices", "application/json", device)
 		done <- err
-
-		fmt.Println(string(resp))
 
 		if err != nil {
 			os.Exit(1)

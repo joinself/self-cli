@@ -14,7 +14,7 @@ var deviceDeactivateCommand = &cobra.Command{
 	Short: "deactivates a device",
 	Long:  "deactivates a device and marks it as unavailable for receiving messages",
 	Run: func(cmd *cobra.Command, args []string) {
-		if len(args) < 1 {
+		if len(args) < 2 {
 			check(errors.New("you must specify an app identity and device [appID, deviceID]"))
 		}
 
