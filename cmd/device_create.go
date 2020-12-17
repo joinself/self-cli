@@ -37,7 +37,7 @@ var deviceCreateCommand = &cobra.Command{
 			check(err)
 
 			epk = enc.EncodeToString(pk)
-			esk = base64.RawStdEncoding.EncodeToString(sk)
+			esk = base64.RawStdEncoding.EncodeToString(sk.Seed())
 		} else {
 			epk = devicePublicKey
 		}

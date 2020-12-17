@@ -39,7 +39,7 @@ var accountRecoverCommand = &cobra.Command{
 			check(err)
 
 			edpk = enc.EncodeToString(dpk)
-			edsk = base64.RawStdEncoding.EncodeToString(dsk)
+			edsk = base64.RawStdEncoding.EncodeToString(dsk.Seed())
 		}
 
 		if recoveryPublicKey != "" {
@@ -49,7 +49,7 @@ var accountRecoverCommand = &cobra.Command{
 			check(err)
 
 			erpk = enc.EncodeToString(rpk)
-			ersk = base64.RawStdEncoding.EncodeToString(rsk)
+			ersk = base64.RawStdEncoding.EncodeToString(rsk.Seed())
 		}
 
 		client := rest(args[0], secretKey)
