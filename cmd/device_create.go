@@ -101,8 +101,9 @@ var deviceCreateCommand = &cobra.Command{
 
 		if esk != "" {
 			fmt.Println("")
-			fmt.Println("device private key:  ", kid+":"+esk)
-			fmt.Println("device public key:   ", epk)
+			fmt.Printf("successfully created device '%s'\n", did)
+			fmt.Println("  device private key:  ", kid+":"+esk)
+			fmt.Println("  device public key:   ", epk)
 		}
 
 		if err != nil {
