@@ -86,5 +86,5 @@ var deviceRevokeCommand = &cobra.Command{
 func init() {
 	deviceCommand.AddCommand(deviceRevokeCommand)
 	deviceRevokeCommand.Flags().StringVarP(&secretKey, "secret-key", "s", "", "Device secret key")
-	deviceRevokeCommand.Flags().IntVarP(&effectiveFrom, "--effective-from", "f", 0, "Unix timestamp denoting when the action takes effect")
+	deviceRevokeCommand.Flags().IntVarP(&effectiveFrom, "effective-from", "f", 0, "Unix timestamp denoting when the action takes effect")
 }

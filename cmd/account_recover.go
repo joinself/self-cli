@@ -22,8 +22,8 @@ var accountRecoverCommand = &cobra.Command{
 	Use:   "recover",
 	Short: "recover an account with a recovery key",
 	Run: func(cmd *cobra.Command, args []string) {
-		if len(args) < 2 {
-			check(errors.New("you must specify an app identity and device [appID, deviceID]"))
+		if len(args) < 1 {
+			check(errors.New("you must specify an app identity and device [appID]"))
 		}
 
 		if recoveryKey == "" {
@@ -81,12 +81,16 @@ var accountRecoverCommand = &cobra.Command{
 		ddid := strconv.Itoa(len(sg.Devices()) + 1)
 		now := ntp.TimeFunc().Unix()
 
+		if effectiveFrom == 0 {
+			effectiveFrom = int(now)
+		}
+
 		actions := []siggraph.Action{
 			{
 				KID:           strings.Split(secretKey, ":")[0],
 				Type:          siggraph.TypeRecoveryKey,
 				Action:        siggraph.ActionKeyRevoke,
-				EffectiveFrom: now,
+				EffectiveFrom: int64(effectiveFrom),
 			},
 			{
 				KID:           dkid,
@@ -135,8 +139,8 @@ var accountRecoverCommand = &cobra.Command{
 
 func init() {
 	accountCommand.AddCommand(accountRecoverCommand)
-	accountRecoverCommand.Flags().StringVarP(&recoveryKey, "--recovery-key", "r", "", "Recovery secet key")
-	accountRecoverCommand.Flags().IntVarP(&effectiveFrom, "--effective-from", "f", 0, "Unix timestamp denoting when the action takes effect")
-	accountRecoverCommand.Flags().StringVarP(&devicePublicKey, "--device-public-key", "p", "", "Device public key")
-	accountRecoverCommand.Flags().StringVarP(&recoveryPublicKey, "--device-recovery-key", "q", "", "Recovery public key")
+	accountRecoverCommand.Flags().StringVarP(&recoveryKey, "recovery-key", "r", "", "Recovery secet key")
+	accountRecoverCommand.Flags().IntVarP(&effectiveFrom, "effective-from", "f", 0, "Unix timestamp denoting when the action takes effect")
+	accountRecoverCommand.Flags().StringVarP(&devicePublicKey, "device-public-key", "p", "", "Device public key")
+	accountRecoverCommand.Flags().StringVarP(&recoveryPublicKey, "device-recovery-key", "q", "", "Recovery public key")
 }
