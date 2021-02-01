@@ -107,6 +107,9 @@ func parseSecretKey(sk string) ed25519.PrivateKey {
 
 func apiURL() string {
 	if v.GetString("self_env") != "" && v.GetString("self_env") != "production" {
+		if v.GetString("self_env") == "dev" {
+			return "http://api:8080"
+		}
 		return "https://api." + v.GetString("self_env") + ".joinself.com"
 	}
 
