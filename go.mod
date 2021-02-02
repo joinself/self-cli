@@ -3,7 +3,7 @@ module github.com/joinself/self-cli
 go 1.14
 
 require (
-	github.com/joinself/self-go-sdk v0.0.0-20201215165053-f67b0d047a12
+	github.com/joinself/self-go-sdk v0.0.0-20210202191930-c8eacbd19922
 	github.com/olekukonko/tablewriter v0.0.4
 	github.com/spf13/cobra v1.1.1
 	github.com/spf13/viper v1.7.1
