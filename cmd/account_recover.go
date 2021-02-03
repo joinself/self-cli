@@ -52,14 +52,14 @@ var accountRecoverCommand = &cobra.Command{
 			ersk = base64.RawStdEncoding.EncodeToString(rsk.Seed())
 		}
 
-		client := rest(args[0], secretKey)
+		client := rest(args[0], recoveryKey)
 
 		done := make(chan error)
 
 		// get the identity history
 		go log("getting identity history", done)
 
-		resp, err := client.Get("/v1/identities/" + args[0])
+		resp, err := client.Get("/v1/identities/" + args[0] + "/history")
 		done <- err
 
 		if err != nil {
@@ -67,12 +67,12 @@ var accountRecoverCommand = &cobra.Command{
 		}
 
 		// load the signature graph
-		var app Identity
+		var history []json.RawMessage
 
-		err = json.Unmarshal(resp, &app)
+		err = json.Unmarshal(resp, &history)
 		check(err)
 
-		sg, err := siggraph.New(app.History)
+		sg, err := siggraph.New(history)
 		check(err)
 
 		// create a new operation
@@ -87,7 +87,7 @@ var accountRecoverCommand = &cobra.Command{
 
 		actions := []siggraph.Action{
 			{
-				KID:           strings.Split(secretKey, ":")[0],
+				KID:           strings.Split(recoveryKey, ":")[0],
 				Type:          siggraph.TypeRecoveryKey,
 				Action:        siggraph.ActionKeyRevoke,
 				EffectiveFrom: int64(effectiveFrom),
@@ -109,7 +109,7 @@ var accountRecoverCommand = &cobra.Command{
 			},
 		}
 
-		operation := newOperation(sg, actions, secretKey)
+		operation := newOperation(sg, actions, recoveryKey)
 
 		// check the operation is valid
 		err = sg.Execute(operation)
