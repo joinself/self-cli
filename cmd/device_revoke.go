@@ -55,10 +55,13 @@ var deviceRevokeCommand = &cobra.Command{
 			ef = int64(effectiveFrom)
 		}
 
+		kid, err := sg.GetKeyID(args[1])
+		check(err)
+
 		// create a new operation
 		actions := []siggraph.Action{
 			{
-				KID:           args[1],
+				KID:           kid,
 				Type:          siggraph.TypeDeviceKey,
 				Action:        siggraph.ActionKeyRevoke,
 				EffectiveFrom: ef,
