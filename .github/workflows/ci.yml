@@ -20,33 +20,33 @@ jobs:
   #         source /root/.profile
   #         license_finder
 
-  secret-scan:
-    runs-on: ubuntu-22.04
-
-    container:
-      image: zricethezav/gitleaks:v8.2.4
-      options: --entrypoint "" --user root
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Secret scan
-        shell: bash
-        run: |
-          whoami
-          pwd
-          ls -lah
-          gitleaks detect --redact -v
-
-  # build:
+  # secret-scan:
   #   runs-on: ubuntu-22.04
 
   #   container:
-  #     image: golang:1.14
+  #     image: zricethezav/gitleaks:v8.2.4
+  #     options: --entrypoint "" --user root
 
   #   steps:
   #     - uses: actions/checkout@v2
 
-  #     - name: Build package
+  #     - name: Secret scan
+  #       shell: bash
   #       run: |
-  #         go build
+  #         gitleaks detect --redact -v
+
+  build:
+    runs-on: ubuntu-22.04
+
+    container:
+      image: golang:1.19.1
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build package
+        run: |
+          GOOS=linux GOARCH=amd64 go build -o self-cli-linux-amd64
+          GOOS=darwin GOARCH=amd64 go build -o self-cli-darwin-amd64
+          GOOS=darwin GOARCH=arm64 go build -o self-cli-darwin-arm64
+          GOOS=windows GOARCH=amd64 go build -o self-cli-windows-arm64
