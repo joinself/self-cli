@@ -48,10 +48,11 @@ jobs:
         shell: bash
         run: |
           export GOOS=linux GOARCH=amd64
-          env
           go build -o self-cli-linux-amd64
-          ls -lah
           export GOOS=darwin GOARCH=amd64
-          env
           go build -o self-cli-darwin-amd64
+          export GOOS=darwin GOARCH=arm64
+          go build -o self-cli-darwin-arm64
+          export GOOS=windows GOARCH=amd64
+          go build -o self-cli-windows-amd64
           ls -lah
