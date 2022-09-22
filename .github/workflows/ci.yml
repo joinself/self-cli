@@ -45,6 +45,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Build package
+        shell: bash
         run: |
           echo "hit1"
           GOOS=linux GOARCH=amd64 go build -o self-cli-linux-amd64
