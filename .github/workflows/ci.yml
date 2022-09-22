@@ -18,7 +18,12 @@ jobs:
           pwd
           ls -lah
           whoami
-          echo "$SHELL"
+          echo "${SHELL}"
+          echo "${GITHUB_ENV}"
+          env | grep HOME
+          export HOME=/root
+          echo "hit"
+          env | grep HOME
           ls -lah /root
           ls -lah /github/home/
           ls /usr/share/rvm/gems/ruby-3.1.1/bin/license_finder
