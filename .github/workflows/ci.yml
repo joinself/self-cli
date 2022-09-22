@@ -15,7 +15,12 @@ jobs:
 
       - name: License check
         run: |
+          pwd
+          ls -lah
           whoami
+          echo "$SHELL"
+          ls -lah /root
+          ls -lah /github/home/
           ls /usr/share/rvm/gems/ruby-3.1.1/bin/license_finder
           . /root/.profile
           license_finder
