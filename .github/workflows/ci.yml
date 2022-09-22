@@ -25,6 +25,7 @@ jobs:
 
     container:
       image: zricethezav/gitleaks:v8.2.4
+      options: --entrypoint
 
     steps:
       - uses: actions/checkout@v2
