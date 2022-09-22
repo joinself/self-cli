@@ -15,6 +15,7 @@ jobs:
 
       - name: License check
         run: |
+          source ~/.profile
           license_finder
 
   secret-scan:
