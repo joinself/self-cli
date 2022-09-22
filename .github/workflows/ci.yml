@@ -33,6 +33,9 @@ jobs:
       - name: Secret scan
         shell: bash
         run: |
+          whoami
+          pwd
+          ls -lah
           gitleaks detect --redact -v
 
   # build:
