@@ -15,6 +15,7 @@ jobs:
 
       - name: License check
         run: |
+          ls /usr/share/rvm/gems/ruby-3.1.1/bin/license_finder
           source ~/.profile
           license_finder
 
