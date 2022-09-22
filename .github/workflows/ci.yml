@@ -1,0 +1,21 @@
+name: CI
+
+on: [push, workflow_dispatch]
+
+jobs:
+  test:
+    runs-on: ubuntu-22.04
+
+    container:
+      image: golang:1.14
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup environment
+        run: |
+          echo "hello 1"
+          echo "hello 2"
+
+      - name: Test package
+        run: go test -v ./...
