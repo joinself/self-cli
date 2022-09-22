@@ -46,8 +46,12 @@ jobs:
 
       - name: Build package
         run: |
+          echo "hit1"
           GOOS=linux GOARCH=amd64 go build -o self-cli-linux-amd64
+          echo "hit2"
           GOOS=darwin GOARCH=amd64 go build -o self-cli-darwin-amd64
+          echo "hit3"
           GOOS=darwin GOARCH=arm64 go build -o self-cli-darwin-arm64
+          echo "hit4"
           GOOS=windows GOARCH=amd64 go build -o self-cli-windows-arm64
-
+          echo "hit5"
