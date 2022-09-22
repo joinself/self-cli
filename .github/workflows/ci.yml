@@ -22,7 +22,7 @@ jobs:
           echo "${SHELL}"
           echo "${GITHUB_ENV}"
           env | grep HOME
-          #export HOME=/root
+          export HOME=/root
           echo "hit"
           env | grep HOME
           #ls -lah /root
