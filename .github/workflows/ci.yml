@@ -17,7 +17,7 @@ jobs:
         run: |
           whoami
           ls /usr/share/rvm/gems/ruby-3.1.1/bin/license_finder
-          . ~/.profile
+          . /root/.profile
           license_finder
 
   # secret-scan:
