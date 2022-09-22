@@ -30,6 +30,14 @@ var accountRecoverCommand = &cobra.Command{
 			check(errors.New("You must provide a secret recovery key"))
 		}
 
+		if strings.Contains(recoveryKey, "_") {
+			keyParts := strings.Split(recoveryKey, "_")
+			if keyParts[0] != "rk_" {
+				check(errors.New("the recovery key provided is not valid, it should start with 'rk'"))
+			}
+			recoveryKey = keyParts[1]
+		}
+
 		var edpk, edsk, erpk, ersk string
 
 		if devicePublicKey != "" {
