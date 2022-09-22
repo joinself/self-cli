@@ -15,32 +15,33 @@ jobs:
 
       - name: License check
         run: |
+          whoami
           ls /usr/share/rvm/gems/ruby-3.1.1/bin/license_finder
           . ~/.profile
           license_finder
 
-  secret-scan:
-    runs-on: ubuntu-22.04
+  # secret-scan:
+  #   runs-on: ubuntu-22.04
 
-    container:
-      image: zricethezav/gitleaks:v8.2.4
+  #   container:
+  #     image: zricethezav/gitleaks:v8.2.4
 
-    steps:
-      - uses: actions/checkout@v2
+  #   steps:
+  #     - uses: actions/checkout@v2
 
-      - name: Secret scan
-        run: |
-          gitleaks detect --redact -v
+  #     - name: Secret scan
+  #       run: |
+  #         gitleaks detect --redact -v
 
-  build:
-    runs-on: ubuntu-22.04
+  # build:
+  #   runs-on: ubuntu-22.04
 
-    container:
-      image: golang:1.14
+  #   container:
+  #     image: golang:1.14
 
-    steps:
-      - uses: actions/checkout@v2
+  #   steps:
+  #     - uses: actions/checkout@v2
 
-      - name: Build package
-        run: |
-          go build
+  #     - name: Build package
+  #       run: |
+  #         go build
