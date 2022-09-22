@@ -47,7 +47,13 @@ jobs:
       - name: Build package
         shell: bash
         run: |
-          GOOS=linux GOARCH=amd64 go build -o self-cli-linux-amd64
+          GOOS=linux
+          GOARCH=amd64
+          env
+          go build -o self-cli-linux-amd64
           ls -lah
-          GOOS=darwin GOARCH=amd64 go build -o self-cli-darwin-amd64
+          GOOS=darwin
+          GOARCH=amd64
+          env
+          go build -o self-cli-darwin-amd64
           ls -lah
