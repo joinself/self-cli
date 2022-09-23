@@ -6,7 +6,7 @@ jobs:
   license-compliance:
     runs-on: ubuntu-latest
     container:
-      image: licensefinder/license_finder
+      image: licensefinder/license_finder:edge
     steps:
       - uses: actions/checkout@v2
       - name: License check
@@ -37,11 +37,8 @@ jobs:
       - name: Build package
         shell: bash
         run: |
-          export GOOS=linux GOARCH=amd64
-          go build -o self-cli-linux-amd64
-          export GOOS=darwin GOARCH=amd64
-          go build -o self-cli-darwin-amd64
-          export GOOS=darwin GOARCH=arm64
-          go build -o self-cli-darwin-arm64
-          export GOOS=windows GOARCH=amd64
-          go build -o self-cli-windows-amd64
+          GOOS=linux GOARCH=amd64 go build -o self-cli-linux-amd64
+          GOOS=darwin GOARCH=amd64 go build -o self-cli-darwin-amd64
+          GOOS=darwin GOARCH=arm64 go build -o self-cli-darwin-arm64
+          GOOS=windows GOARCH=amd64 go build -o self-cli-windows-amd64
+          ls -lah
