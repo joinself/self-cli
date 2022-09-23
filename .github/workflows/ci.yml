@@ -47,11 +47,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: '0'
       - name: Bump version and push tag
         id: poo
         uses: anothrNick/github-tag-action@1.40.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PRERELEASE_SUFFIX:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
