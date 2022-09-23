@@ -54,7 +54,7 @@ jobs:
         uses: anothrNick/github-tag-action@1.40.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PRERELEASE_SUFFIX:
+          PRERELEASE_SUFFIX: ""
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
