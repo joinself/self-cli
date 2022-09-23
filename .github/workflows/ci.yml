@@ -43,24 +43,41 @@ jobs:
   #         GOOS=windows GOARCH=amd64 go build -o self-cli-windows-amd64
   #         ls -lah
 
+  #release:
+  #  runs-on: ubuntu-latest
+  #  steps:
+  #    - uses: actions/checkout@v2
+  #      with:
+  #        fetch-depth: '0'
+  #    - name: Bump version and push tag
+  #      id: poo
+  #      uses: anothrNick/github-tag-action@1.40.0
+  #      env:
+  #        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #        PRERELEASE_SUFFIX: ""
+  #    - name: Release
+  #      uses: softprops/action-gh-release@v1
+  #      with:
+  #        tag_name: ${{ steps.poo.outputs.new_tag }}
+  #      #if: github.ref == 'refs/heads/main'
+  #    - name:
+  #      shell: bash
+  #      run: |
+  #        echo "hello3"
+
+
   release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        with:
-          fetch-depth: '0'
       - name: Bump version and push tag
-        id: poo
-        uses: anothrNick/github-tag-action@1.40.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PRERELEASE_SUFFIX: ""
-      - name: Release
-        uses: softprops/action-gh-release@v1
+        id: tag_version
+        uses: mathieudutour/github-tag-action@v6.0
         with:
-          tag_name: ${{ steps.poo.outputs.new_tag }}
-        #if: github.ref == 'refs/heads/main'
-      - name:
-        shell: bash
-        run: |
-          echo "hello3"
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create a GitHub release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ steps.tag_version.outputs.new_tag }}
+          name: Release ${{ steps.tag_version.outputs.new_tag }}
+          body: ${{ steps.tag_version.outputs.changelog }}
