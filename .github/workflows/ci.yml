@@ -47,6 +47,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Release
-        uses: softprops/action-gh-release@v1
+      - name: Bump version and push tag
+        uses: anothrNick/github-tag-action@1.40.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Release
+      #   uses: softprops/action-gh-release@v1
         #if: github.ref == 'refs/heads/main'
+      - name:
+        shell: bash
+        run: |
+          echo "hello"
