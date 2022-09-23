@@ -42,3 +42,15 @@ jobs:
           GOOS=darwin GOARCH=arm64 go build -o self-cli-darwin-arm64
           GOOS=windows GOARCH=amd64 go build -o self-cli-windows-amd64
           ls -lah
+
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          echo "hello"
+          ls -lah
