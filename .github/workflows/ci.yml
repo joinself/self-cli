@@ -50,7 +50,3 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         if: github.ref == 'refs/heads/main'
-        shell: bash
-        run: |
-          echo "hello"
-          ls -lah
