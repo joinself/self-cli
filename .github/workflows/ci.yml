@@ -53,6 +53,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Release
         uses: softprops/action-gh-release@v1
+        with:
+          tag_name: 2.0.0
         #if: github.ref == 'refs/heads/main'
       - name:
         shell: bash
