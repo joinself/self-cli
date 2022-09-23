@@ -3,45 +3,45 @@ name: CI
 on: [push, workflow_dispatch]
 
 jobs:
-  license-compliance:
-    runs-on: ubuntu-latest
-    container:
-      image: licensefinder/license_finder:edge
-    steps:
-      - uses: actions/checkout@v2
-      - name: License check
-        shell: bash
-        run: |
-          export HOME=/root
-          source /root/.profile
-          license_finder --decisions_file ./.github/license_finder.yml
+  # license-compliance:
+  #   runs-on: ubuntu-latest
+  #   container:
+  #     image: licensefinder/license_finder:edge
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - name: License check
+  #       shell: bash
+  #       run: |
+  #         export HOME=/root
+  #         source /root/.profile
+  #         license_finder --decisions_file ./.github/license_finder.yml
 
-  secret-scan:
-    runs-on: ubuntu-latest
-    container:
-      image: zricethezav/gitleaks:v8.2.4
-      options: --entrypoint "" --user root
-    steps:
-      - uses: actions/checkout@v2
-      - name: Secret scan
-        shell: bash
-        run: |
-          gitleaks detect -c ./.github/gitleaks.toml --redact -v
+  # secret-scan:
+  #   runs-on: ubuntu-latest
+  #   container:
+  #     image: zricethezav/gitleaks:v8.2.4
+  #     options: --entrypoint "" --user root
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - name: Secret scan
+  #       shell: bash
+  #       run: |
+  #         gitleaks detect -c ./.github/gitleaks.toml --redact -v
 
-  build:
-    runs-on: ubuntu-latest
-    container:
-      image: golang:1.19.1
-    steps:
-      - uses: actions/checkout@v2
-      - name: Build package
-        shell: bash
-        run: |
-          GOOS=linux GOARCH=amd64 go build -o self-cli-linux-amd64
-          GOOS=darwin GOARCH=amd64 go build -o self-cli-darwin-amd64
-          GOOS=darwin GOARCH=arm64 go build -o self-cli-darwin-arm64
-          GOOS=windows GOARCH=amd64 go build -o self-cli-windows-amd64
-          ls -lah
+  # build:
+  #   runs-on: ubuntu-latest
+  #   container:
+  #     image: golang:1.19.1
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - name: Build package
+  #       shell: bash
+  #       run: |
+  #         GOOS=linux GOARCH=amd64 go build -o self-cli-linux-amd64
+  #         GOOS=darwin GOARCH=amd64 go build -o self-cli-darwin-amd64
+  #         GOOS=darwin GOARCH=arm64 go build -o self-cli-darwin-arm64
+  #         GOOS=windows GOARCH=amd64 go build -o self-cli-windows-amd64
+  #         ls -lah
 
   release:
     runs-on: ubuntu-latest
@@ -49,4 +49,4 @@ jobs:
       - uses: actions/checkout@v2
       - name: Release
         uses: softprops/action-gh-release@v1
-        if: github.ref == 'refs/heads/main'
+        #if: github.ref == 'refs/heads/main'
