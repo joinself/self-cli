@@ -1,0 +1,25 @@
+---
+
+- - :permit
+  - MIT
+- - :permit
+  - Apache 2.0
+- - :permit
+  - Simplified BSD
+- - :permit
+  - New BSD
+- - :permit
+  - Mozilla Public License 2.0
+
+- - :license
+  - github.com/spf13/afero
+  - Apache 2.0
+- - :license
+  - github.com/spf13/cobra
+  - Apache 2.0
+- - :license
+  - github.com/beevik/ntp
+  - Simplified BSD
+- - :license
+  - github.com/tj/go-spin
+  - MIT
