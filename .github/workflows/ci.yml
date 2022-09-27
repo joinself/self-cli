@@ -6,7 +6,7 @@ jobs:
   license-compliance:
     runs-on: ubuntu-latest
     container:
-      image: licensefinder/license_finder:edge
+      image: joinself/license-finder:go
     steps:
       - uses: actions/checkout@v2
       - name: License check
