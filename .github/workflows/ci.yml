@@ -8,9 +8,11 @@ jobs:
     container:
       image: joinself/license-finder:go
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: License check
         shell: bash
+        env:
+          GOFLAGS: "-buildvcs=false"
         run: |
           export HOME=/root
           source /root/.profile
@@ -22,7 +24,7 @@ jobs:
       image: zricethezav/gitleaks:v8.2.4
       options: --entrypoint "" --user root
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Secret scan
         shell: bash
         run: gitleaks detect -c ./.github/gitleaks.toml --redact -v
@@ -32,7 +34,7 @@ jobs:
     container:
       image: golang:1.19.1
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Build packages
         shell: bash
         run: |
@@ -41,7 +43,7 @@ jobs:
           GOOS=darwin GOARCH=arm64 go build -o self-cli-darwin-arm64
           GOOS=windows GOARCH=amd64 go build -o self-cli-windows-amd64
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: artifacts
           path: self-cli-*
@@ -51,8 +53,8 @@ jobs:
     needs: [license-compliance, secret-scan, build]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/download-artifact@v3
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
         with:
           name: artifacts
       - name: Bump version and push tag
